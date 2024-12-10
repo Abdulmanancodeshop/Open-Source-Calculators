@@ -1,3 +1,8 @@
+<style>
+    html{
+        overflow: hidden;
+    }
+</style>
 <div class="container">
     <div
         style="max-width: 600px; margin: 50px auto; padding: 30px; background: linear-gradient(145deg, #ffffff, #f0f0f0); border-radius: 15px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); text-align: center;">
@@ -32,7 +37,7 @@
         </button>
 
         <!-- Results Section -->
-        <div id="result" style="margin-top: 30px; font-size: 18px; font-weight: bold; color: #333;"></div>
+        <div id="result" style="margin-top: 30px; font-size: 22px; font-weight: bold; color: #333;"></div>
     </div>
 </div>
 
@@ -56,18 +61,21 @@
             return;
         }
 
-        const retainedStudents = end - newStudents;
-        const churnedStudents = start - retainedStudents;
-        const retentionRate = ((retainedStudents / start) * 100).toFixed(2);
-        const churnRate = (100 - retentionRate).toFixed(2);
+        // Calculate retained students and churned students
+        const totalStudentsAtStart = start + newStudents;
+        const churnedStudents = totalStudentsAtStart - end; // Students lost
+        const retentionRate = ((end / totalStudentsAtStart) * 100).toFixed(2); // Retention rate
+        const churnRate = (100 - retentionRate).toFixed(2); // Churn rate
+
+        // Tuition lost calculations
         const monthlyLost = churnedStudents * tuition;
         const annualLost = monthlyLost * 12;
 
-        // Display Results
+        // Format output
         document.getElementById('result').innerHTML = `
             <div>
-                <p><strong>Retention Rate:</strong> <span style="color: #28a745;">${retentionRate}%</span></p>
-                <p><strong>Dropout Rate:</strong> <span style="color: #c80000;">${churnRate}%</span></p>
+                <p><strong>Retention Rate:</strong> <span style="color: #c80000;">${retentionRate}%</span></p>
+                <p><strong>Churn Rate:</strong> <span style="color: #c80000;">${churnRate}%</span></p>
                 <p><strong>Monthly Tuition Lost:</strong> <span style="color: #c80000;">${formatCurrency(monthlyLost)}</span></p>
                 <p><strong>Annual Tuition Lost:</strong> <span style="color: #c80000;">${formatCurrency(annualLost)}</span></p>
             </div>
