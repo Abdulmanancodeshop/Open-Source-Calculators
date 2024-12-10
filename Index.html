@@ -1,0 +1,86 @@
+<style>
+  html{
+overflow: hidden;
+  }
+</style>
+<div class="container">
+    <div
+        style="max-width: 600px; margin: 50px auto; padding: 30px; background: linear-gradient(145deg, #ffffff, #f0f0f0); border-radius: 15px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); text-align: center;">
+        <h2
+            style="font-size: 30px; font-weight: bold; color: #c80000; margin-bottom: 25px;">
+            Student Retention Calculator</h2>
+
+        <!-- Input Fields -->
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="start" style="font-weight: bold; font-size: 16px; color: #000000;">Number of Students at Start:</label>
+            <input id="start" type="number" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Enter starting number">
+        </div>
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="new" style="font-weight: bold; font-size: 16px; color: #000000;">Number of New Students Added:</label>
+            <input id="new" type="number" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Enter new enrollments">
+        </div>
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="end" style="font-weight: bold; font-size: 16px; color: #000000;">Number of Students at End:</label>
+            <input id="end" type="number" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Enter ending number">
+        </div>
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="tuition" style="font-weight: bold; font-size: 16px; color: #000000;">Monthly Tuition (in USD):</label>
+            <div style="position: relative; width: 100%;">
+                <span style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); font-size: 16px; font-weight: bold; color: #333;">$</span>
+                <input id="tuition" type="text" style="width: 100%; padding: 10px 10px 10px 25px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;" placeholder="Enter monthly tuition">
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button onclick="calculateRetention()" style="width: 100%; padding: 15px; background: #c80000; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;">
+            Calculate
+        </button>
+
+        <!-- Results Section -->
+        <div id="result" style="margin-top: 30px; font-size: 22px; font-weight: bold; color: #333;"></div>
+    </div>
+</div>
+
+<script>
+    function formatCurrency(value) {
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD"
+        }).format(value);
+    }
+
+    function calculateRetention() {
+        const start = parseFloat(document.getElementById('start').value) || 0;
+        const newStudents = parseFloat(document.getElementById('new').value) || 0;
+        const end = parseFloat(document.getElementById('end').value) || 0;
+        const tuitionInput = document.getElementById('tuition').value.replace(/,/g, '');
+        const tuition = parseFloat(tuitionInput) || 0;
+
+        if (start <= 0 || end <= 0 || tuition <= 0) {
+            document.getElementById('result').innerHTML = "<span style='color: red;'>Please enter valid inputs for all fields.</span>";
+            return;
+        }
+
+        const retainedStudents = end - newStudents; 
+        const churnedStudents = start - retainedStudents; // Students lost
+        const churnRate = ((churnedStudents / start) * 100).toFixed(2); // Churn rate
+        const tuitionLost = formatCurrency(churnedStudents * tuition); // Tuition lost
+
+        // Display Results
+        document.getElementById('result').innerHTML = `
+            <div>
+                <p><strong>Retention Rate:</strong> <span style="color: #c80000;">${churnRate}%</span></p>
+                <p><strong>Tuition Lost to Dropouts:</strong> <span style="color: #c80000;">${tuitionLost}</span></p>
+            </div>
+        `;
+    }
+
+    // Format tuition field as user types
+    document.getElementById('tuition').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/[^0-9.]/g, '');
+        if (value) {
+            value = parseFloat(value).toLocaleString("en-US");
+        }
+        e.target.value = value ? value : '';
+    });
+  </script>
