@@ -1,10 +1,9 @@
-
 <div class="container">
     <div
         style="max-width: 600px; margin: 50px auto; padding: 30px; background: linear-gradient(145deg, #ffffff, #f0f0f0); border-radius: 15px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); text-align: center;">
         <h2
             style="font-size: 30px; font-weight: bold; color: #c80000; margin-bottom: 25px;">
-            Student Retention Calculator</h2>
+            Student Dropout Cost Calculator</h2>
 
         <!-- Input Fields -->
         <div style="margin-bottom: 20px; text-align: left;">
@@ -33,7 +32,7 @@
         </button>
 
         <!-- Results Section -->
-        <div id="result" style="margin-top: 30px; font-size: 22px; font-weight: bold; color: #333;"></div>
+        <div id="result" style="margin-top: 30px; font-size: 18px; font-weight: bold; color: #333;"></div>
     </div>
 </div>
 
@@ -57,16 +56,20 @@
             return;
         }
 
-        const retainedStudents = end - newStudents; 
-        const churnedStudents = start - retainedStudents; // Students lost
-        const churnRate = ((churnedStudents / start) * 100).toFixed(2); // Churn rate
-        const tuitionLost = formatCurrency(churnedStudents * tuition); // Tuition lost
+        const retainedStudents = end - newStudents;
+        const churnedStudents = start - retainedStudents;
+        const retentionRate = ((retainedStudents / start) * 100).toFixed(2);
+        const churnRate = (100 - retentionRate).toFixed(2);
+        const monthlyLost = churnedStudents * tuition;
+        const annualLost = monthlyLost * 12;
 
         // Display Results
         document.getElementById('result').innerHTML = `
             <div>
-                <p><strong>Retention Rate:</strong> <span style="color: #c80000;">${churnRate}%</span></p>
-                <p><strong>Tuition Lost to Dropouts:</strong> <span style="color: #c80000;">${tuitionLost}</span></p>
+                <p><strong>Retention Rate:</strong> <span style="color: #28a745;">${retentionRate}%</span></p>
+                <p><strong>Dropout Rate:</strong> <span style="color: #c80000;">${churnRate}%</span></p>
+                <p><strong>Monthly Tuition Lost:</strong> <span style="color: #c80000;">${formatCurrency(monthlyLost)}</span></p>
+                <p><strong>Annual Tuition Lost:</strong> <span style="color: #c80000;">${formatCurrency(annualLost)}</span></p>
             </div>
         `;
     }
@@ -79,4 +82,4 @@
         }
         e.target.value = value ? value : '';
     });
-  </script>
+</script>
