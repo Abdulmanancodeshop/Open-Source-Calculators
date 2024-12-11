@@ -61,15 +61,17 @@
             return;
         }
 
+
         // Calculate retained students and churned students
         const totalStudentsAtStart = start + newStudents;
         const churnedStudents = totalStudentsAtStart - end; // Students lost
-        const retentionRate = ((end / totalStudentsAtStart) * 100).toFixed(2); // Retention rate
-        const churnRate = (100 - retentionRate).toFixed(2); // Churn rate
-
+        const retentionRate = Math.round((end / totalStudentsAtStart) * 100); // Retention rate
+        const churnRate = 100 - retentionRate; // Churn rate
+        
         // Tuition lost calculations
         const monthlyLost = churnedStudents * tuition;
         const annualLost = monthlyLost * 12;
+
 
         // Format output
         document.getElementById('result').innerHTML = `
